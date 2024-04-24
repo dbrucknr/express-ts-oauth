@@ -10,6 +10,6 @@ const DetermineLoginStatus = async (request: Request, response: Response) => {
 // Might need to Rename to GoogleAuthController
 export const AuthController = (): IAuthController => ({
     logout: async (request: Request, response: Response) => {},
-    login: async (request: Request, response: Response) => {},
-    authenticate: async (request: Request, response: Response) => {},
+    login: async (request: Request, response: Response) => { response.send("Hello from login") },
+    authenticate: async (request: Request, response: Response) => { response.send("Hello from authenticate") },
 })

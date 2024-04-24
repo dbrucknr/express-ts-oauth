@@ -3,5 +3,5 @@ import { IAuthController } from "./auth.types";
 
 export {
     AuthController,
-    IAuthController
+    type IAuthController,
 }
