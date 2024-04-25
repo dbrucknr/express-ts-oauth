@@ -9,7 +9,6 @@ export const AuthEnv = (): IAuthEnv => ({
 export const GoogleAuthConfig = (
     environment: IAuthEnv = AuthEnv()
 ): IGoogleAuthConfig => {
-    console.log(environment)
     const { auth: { OAuth2 }, oauth2 } = google;
 
     const OAuth2Client = new OAuth2(

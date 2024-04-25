@@ -1,8 +1,9 @@
 import { AuthController } from "./auth.controller";
-import { GoogleAuthConfig } from "./auth.config";
+import { GoogleAuthConfig, AuthEnv, } from "./auth.config";
 import { IAuthController, IAuthEnv, IGoogleAuthConfig } from "./auth.types";
 
 export {
+    AuthEnv,
     AuthController,
     GoogleAuthConfig,
     type IAuthController,
