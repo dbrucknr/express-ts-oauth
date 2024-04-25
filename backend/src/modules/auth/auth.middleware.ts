@@ -1,14 +1,17 @@
-import { Request, Response, NextFunction } from "express";
-import { GoogleAuthConfig, IGoogleAuthConfig, AuthEnv, IAuthEnv } from "."
+import { Response, NextFunction } from "express";
+import { GoogleAuthConfig, IGoogleAuthConfig, AuthEnv, IAuthEnv, AuthenticatedRequest } from "."
 
 export const AuthMiddleware = (
     environment: IAuthEnv = AuthEnv(),
     config: IGoogleAuthConfig = GoogleAuthConfig()
 ) => ({
-    isAuthenticated: async (request: Request, response: Response, next: NextFunction) => {
+    // https://blog.logrocket.com/extend-express-request-object-typescript/
+    isAuthenticated: async (request: AuthenticatedRequest, response: Response, next: NextFunction) => {
         const { authorization } = request.headers
         if (!authorization) {
-            return response.status(401).json({ message: "Access denied. Please Authenticate" });
+            return response.status(401).json({ 
+                message: "Access denied. Please Authenticate" 
+            });
         } else {
             try {
                 const token = authorization.split(' ')[1];
@@ -16,7 +19,10 @@ export const AuthMiddleware = (
                     idToken: token, 
                     audience: environment.GOOGLE_CLIENT_ID 
                 });
-                request.user = userData // Store user data in request object for use in downstream handlers?
+                const { payload } = userData.getAttributes();
+                if (payload) { 
+                    request.token = payload // Store user data in request object for use in downstream handlers?
+                } 
                 next()
             } catch (error) {
                 response.status(403).json({ message: "Invalid token." });

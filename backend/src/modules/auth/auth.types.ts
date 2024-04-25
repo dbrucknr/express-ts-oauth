@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { TokenPayload } from "google-auth-library"
 import { oauth2_v2 } from "googleapis"
 import { OAuth2Client } from "googleapis-common"
 
@@ -17,4 +18,14 @@ export interface IGoogleAuthConfig {
     GoogleOAuth: oauth2_v2.Oauth2 
     RedirectUri: string;
     OAuth2Client: OAuth2Client
+}
+
+export interface User {
+    /** Maps to Scopes provided in Auth Config */
+    email: string;
+    profile: string;
+}
+
+export interface AuthenticatedRequest extends Request {
+    token: TokenPayload
 }
