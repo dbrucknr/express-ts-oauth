@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Application } from "./app";
 import { AuthModule } from "./modules";
 
