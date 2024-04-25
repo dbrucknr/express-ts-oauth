@@ -27,5 +27,6 @@ export interface User {
 }
 
 export interface AuthenticatedRequest extends Request {
+    // https://blog.logrocket.com/extend-express-request-object-typescript/
     token: TokenPayload
 }

@@ -8,21 +8,20 @@ import { IAuthController, GoogleAuthConfig, IGoogleAuthConfig } from ".";
 
 const HandleLogin = async (request: Request, response: Response, config: IGoogleAuthConfig) => {
     // I need a way of checking if the user is authenticated
-    // const { data } = await config.GoogleOAuth.userinfo.v2.me.get();
-    // console.log("HandleLogin", data)
-    // response.json({ data })
-    response.redirect(config.RedirectUri)
+    response.redirect(config.RedirectUri);
 }
 
 // Add Request Type (Query Type)
 const HandleAuthentication = async (request: Request, response: Response, config: IGoogleAuthConfig) => {
     // Extract Authorization Code
-    const { code }  = request.query;
+    const { code } = request.query;
     if (code) {
-        const { tokens } = await config.OAuth2Client.getToken(code as string)
-        config.OAuth2Client.setCredentials(tokens)
+        const { tokens } = await config.OAuth2Client.getToken(code as string);
+        config.OAuth2Client.setCredentials(tokens);
+        response.redirect("/api/sample")
+    } else {
+        response.status(500).json({ message: "Auth Error" })
     }
-    response.redirect("/api")
 }
 
 // Might need to Rename to GoogleAuthController

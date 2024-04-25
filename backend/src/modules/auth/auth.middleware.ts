@@ -1,27 +1,26 @@
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { GoogleAuthConfig, IGoogleAuthConfig, AuthEnv, IAuthEnv, AuthenticatedRequest } from "."
 
-export const AuthMiddleware = (
+export const AuthMiddlewareHandlers = (
     environment: IAuthEnv = AuthEnv(),
     config: IGoogleAuthConfig = GoogleAuthConfig()
 ) => ({
-    // https://blog.logrocket.com/extend-express-request-object-typescript/
-    isAuthenticated: async (request: AuthenticatedRequest, response: Response, next: NextFunction) => {
-        const { authorization } = request.headers
-        if (!authorization) {
+    isAuthenticated: async (request: Request, response: Response, next: NextFunction) => {
+        if (Object.keys(config.OAuth2Client.credentials).length === 0) {
             return response.status(401).json({ 
                 message: "Access denied. Please Authenticate" 
             });
         } else {
             try {
-                const token = authorization.split(' ')[1];
+                const { id_token } = config.OAuth2Client.credentials
                 const userData = await config.OAuth2Client.verifyIdToken({ 
-                    idToken: token, 
+                    idToken: id_token!, 
                     audience: environment.GOOGLE_CLIENT_ID 
                 });
                 const { payload } = userData.getAttributes();
-                if (payload) { 
-                    request.token = payload // Store user data in request object for use in downstream handlers?
+                if (payload) {
+                    console.log(payload) 
+                    // request.token = payload // Store user data in request object for use in downstream handlers?
                 } 
                 next()
             } catch (error) {
@@ -29,4 +28,10 @@ export const AuthMiddleware = (
             }
         }
     }
-}) 
+});
+
+export const AuthMiddleware = (
+    handlers = AuthMiddlewareHandlers()
+) => ([
+    handlers.isAuthenticated
+])

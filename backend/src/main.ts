@@ -1,9 +1,10 @@
 import 'dotenv/config'
 import { Application } from "./app";
-import { AuthModule } from "./modules";
+import { AuthModule, SampleModule } from "./modules";
 
 const { app, port } = Application()([
-    AuthModule
+    AuthModule,
+    SampleModule
 ]);
 
 app.listen(port, async () => {
